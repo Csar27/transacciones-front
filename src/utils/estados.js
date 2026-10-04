@@ -33,45 +33,52 @@ export const ESTADO = {
  *
  * `descripcion` es la ayuda de la ficha de estado en el detalle. Explica el
  * significado, no el nombre: "Rechazada" ya se lee solo.
+ *
+ * `color` NO es un hexadecimal: es una referencia a una variable CSS declarada
+ * en estilos.css. Hace falta por el tema oscuro —un #1d4ed8 sobre fondo oscuro se
+ * apaga— y porque el valor vive asi en un solo sitio, junto al resto de la
+ * paleta, en vez de repartido entre este archivo y la hoja de estilo.
  */
 export const ESTADOS = [
   {
     valor: ESTADO.BARRADOR,
     nombre: 'Borrador',
-    color: '#64748b',
+    color: 'var(--color-estado-0)',
     descripcion: 'Creada pero todavia no enviada.',
   },
   {
     valor: ESTADO.REGISTRADA,
     nombre: 'Registrada',
-    color: '#1d4ed8',
+    color: 'var(--color-estado-1)',
     descripcion: 'Pendiente de validacion. Su vigencia corre.',
   },
   {
     valor: ESTADO.APROBADA,
     nombre: 'Aprobada',
-    color: '#15803d',
+    color: 'var(--color-estado-2)',
     descripcion: 'Validada. Ya no vence, pero se puede anular.',
   },
   {
     valor: ESTADO.RECHAZADA,
     nombre: 'Rechazada',
-    color: '#b91c1c',
+    color: 'var(--color-estado-3)',
     descripcion: 'Rechazada con motivo registrado. Estado final.',
   },
   {
     valor: ESTADO.VENCIDA,
     nombre: 'Vencida',
-    color: '#b45309',
+    color: 'var(--color-estado-4)',
     descripcion: 'No se atendio antes de su fecha limite. Estado final.',
   },
   {
     valor: ESTADO.ANULADA,
     nombre: 'Anulada',
-    // Gris oscuro, no gris claro: un gris de valor #94a3b8 sobre fondo claro se
-    // queda en 2,3:1 y no pasa el minimo AA. El peso visual lo distinguen de
-    // Borrador; la etiqueta hace el resto.
-    color: '#475569',
+    // En tema oscuro Anulada necesita mas luz que en el claro —L=0,655 frente a
+    // 0,600— porque el fondo tambien baja: a 0,600 se queda en 4,15:1 sobre el
+    // fondo real de la insignia y no pasa AA. En claro el gris es oscuro (#475569,
+    // 6,7:1): un gris claro sobre papel se queda en 2,3:1. El peso visual lo
+    // distinguen de Borrador; la etiqueta hace el resto.
+    color: 'var(--color-estado-5)',
     descripcion: 'Anulada por el usuario. Estado final.',
   },
 ]
@@ -148,7 +155,10 @@ export function fichaEstado(valor) {
     ESTADOS.find((estado) => estado.valor === valor) ?? {
       valor,
       nombre: `Estado ${valor}`,
-      color: '#666e85',
+      // Si el backend anade un estado que aqui no conoce, se muestra el numero
+      // en vez de hides. El color es el del texto secundario: cualquier tinte de
+      // estado seria una afirmacion que la interfaz no puede sostener.
+      color: 'var(--color-ink-muted)',
       descripcion: 'Estado no reconocido por esta version de la interfaz.',
     }
   )

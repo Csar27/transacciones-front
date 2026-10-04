@@ -84,6 +84,7 @@ src/
 ├── components/                Piezas reutilizables, sin conocimiento del dominio
 │   ├── Boton.jsx              Cuatro variantes, estado de carga
 │   ├── BotonCorrelacion.jsx   Pide un id de correlación y lo copia
+│   ├── BotonTema.jsx          Interruptor claro/oscuro
 │   ├── Campo.jsx              Label + error + ayuda, cableado de accesibilidad
 │   ├── CamposTexto.jsx        Entrada, AreaTexto y Selector con la misma clase
 │   ├── Confirmar.jsx          Confirmación de una acción sin datos
@@ -95,7 +96,8 @@ src/
 │   ├── Paginacion.jsx         Ventana de páginas con huecos
 │   ├── PanelError.jsx         Error con reintento e id de correlación
 │   ├── SelectorCliente.jsx    Combobox: se elige por nombre, se envía el UUID
-│   └── Vacio.jsx              Pantalla vacía con llamada a la acción
+│   ├── Vacio.jsx              Pantalla vacía con llamada a la acción
+│   └── (los .test.js viven junto a lo que prueban, en api/ y utils/)
 │
 ├── features/solicitudes/      Todo lo propio del módulo
 │   ├── components/
@@ -108,7 +110,8 @@ src/
 │
 ├── hooks/                     TanStack Query y utilidades
 │   ├── useDebounce.js
-│   └── useSolicitudes.js
+│   ├── useSolicitudes.js
+│   └── useTema.js              Suscripción al tema, sin React en utils/
 │
 ├── layouts/
 │   └── LayoutPrincipal.jsx    Lateral, cabecera, cajon de móvil
@@ -118,9 +121,10 @@ src/
 │
 ├── utils/                     Sin dependencias de React
 │   ├── clientesDemo.js        Catálogo de ejemplo — se sustituye por la API
-│   ├── estados.js             Enum, tabla de transiciones, colores
+│   ├── estados.js             Enum, tabla de transiciones, color por variable
 │   ├── formateo.js            Fechas, montos, UUID
 │   ├── monedas.js             Catálogo cerrado de monedas ISO 4217
+│   ├── tema.js                Tema claro/oscuro. Sin React, a propósito
 │   └── validacion.js          Esquemas Zod
 │
 ├── App.jsx                    Rutas y proveedores
@@ -337,12 +341,84 @@ color va con la urgencia, no con el estado. Al lado de seis estados distintos,
 "origen —— destino", con las que salen del estado actual destacadas. Es la tabla
 del dominio dibujada, no una ilustración.
 
+### Tema oscuro
+
+Interruptor en la cabecera. Sin atributo en `<html>` manda la preferencia del
+sistema; en cuanto se pulsa, la elección queda guardada en `localStorage` y gana
+sobre el sistema.
+
+El interruptor **muestra el tema al que se va**, no el que hay: es un botón de
+acción, y un icono de luna junto a un panel oscuro se lee como "estás en oscuro"
+cuando lo que quiere decir es "pulsa para pasar a claro".
+
+#### Cada token tiene su valor oscuro, y no es el mismo
+
+No es un inverso automático. El índigo `#4338CA` del tema claro da **2,26:1**
+sobre la superficie oscura: reutilizarlo sería el fallo clásico de un tema
+oscuro hecho a medias.
+
+| Token | Claro | Oscuro | Sobre `surface` |
+|---|---|---|---|
+`canvas` | `#f1f3f9` | `#0b0c11` | |
+`surface` | `#ffffff` | `#16171d` | |
+`ink` | `#14171f` | `#eaebee` | 15,00 |
+`ink-muted` | `#666e85` | `#9598a4` | 6,22 |
+`brand` | `#4338ca` | `#8994f7` | 6,51 |
+`brand-ink` | `#ffffff` | `#0c0e1c` | botón 6,98 |
+`danger` | `#b91c1c` | `#f9786a` | 6,75 |
+`danger-body` | `#7f1d1d` | `#ffc1b7` | 11,55 |
+
+Todos los valores se calcularon en OKLCH conservando el matiz del tema claro y
+subiendo la luminosidad. **Subir solo la luz sin bajar la croma produce néon**
+sobre fondo oscuro, así que la croma va a la baja en todos.
+
+`brand-ink` invierte con el tema: es el texto *sobre* un relleno de marca, y en
+oscuro el relleno se aclara, luego el texto tiene que oscurecerse. Lo mismo con
+`danger-on` en el botón de peligro al pasar el ratón.
+
+#### Los estados se miden sobre su fondo real, no sobre la superficie
+
+La insignia se pinta con el color del estado al 8 % de alfa sobre la página, así
+que el fondo donde vive el texto no es `surface` sino esa composición. Medido
+sobre ella:
+
+```
+Borrador 6,41 · Registrada 6,56 · Aprobada 7,70 · Rechazada 5,64 · Vencida 7,47 · Anulada 5,07
+```
+
+`Anulada` necesita `L=0,655` en oscuro y no `0,600`: a 0,600 se queda en **4,15**
+y no pasa AA. En claro el gris es oscuro (`#475569`, 6,7:1) porque un gris claro
+sobre papel se queda en 2,3:1 — los dos temas necesitan direcciones opuestas, y
+no es un error que el mismo token sea claro en uno y oscuro en el otro.
+
+#### El rojo de peligro es una familia, no un hexadecimal
+
+Aparecía como hex suelto en nueve ficheros. Sin token, en oscuro `#7f1d1d` sobre
+superficie oscura da **1,78:1** y `bg-[#fdf5f5]` se convierte en un rectángulo
+blanco de **16,65:1** en mitad de una pantalla negra. Ahora son `danger`,
+`danger-on`, `danger-line`, `danger-tint` y `danger-body`.
+
+#### La escala de urgencia ya no está duplicada
+
+`MedidorVigencia` usaba `#b91c1c`, `#b45309` y `#1d4ed8` — exactamente los
+tonos de Rechazada, Vencida y Registrada. La paleta estaba en dos sitios, que es
+justo lo que el catálogo de estados advertía. Ahora usa `var(--color-estado-3)`,
+`var(--color-estado-4)` y `var(--color-estado-1)`, y no se puede
+desincronizar.
+
 ### Lo que no está
 
 Sin tarjetas KPI: no hay endpoint de métricas y fabricarlas sería mentir. Sin
 sombras salvo en modales. Sin etiquetas en mayúsculas, sin `→` en los botones,
 sin puntos medios en los metadatos. Todo el texto en oraciones, alineado a la
 izquierda; los números a la derecha y nada centrado.
+
+**No hay estado "automático" en el interruptor.** Seguir al sistema es el punto
+de partida, pero en cuanto se pulsa la elección queda guardada y volver a
+automático exige borrar el almacenamiento local del navegador. Es una
+limitación asumida: un control de tres segmentos no cabe en una cabecera densa
+sin competir con el contenido. Si algún día hace falta, el sitio es
+`BotonTema.jsx`, con un menú de tres opciones — no un gesto oculto.
 
 ---
 
@@ -367,14 +443,23 @@ izquierda; los números a la derecha y nada centrado.
 npm test
 ```
 
-Cuatro suites sobre lo que puede romperse en silencio:
+Cinco suites sobre lo que puede romperse en silencio:
 
 | Fichero | Qué cubre |
 |---|---|
 | `api/cliente.test.js` | Los dos formatos de error, la correlación, las claves de campo |
-| `utils/estados.test.js` | La tabla de transiciones, contra el dominio |
+| `utils/estados.test.js` | La tabla de transiciones, contra el dominio, y que el color sea variable CSS |
 | `utils/formateo.test.js` | El rango de fechas en UTC, y el medidor de vigencia |
+| `utils/tema.test.js` | Precedencia sistema / elección, valor corrupto en `localStorage`, el ciclo de alternar |
 | `utils/validacion.test.js` | Los límites del formulario, contra `CrearSolicitudDto` |
 
 No hay pruebas de componentes: no se pidió y el coste sube más que el
 beneficio. Lo que sí tiene pruebas es la lógica pura y compartida.
+
+`tema.test.js` monta `window` y `document` como stubs en lugar de pedir
+`jsdom`, porque el resto de la suite corre en `environment: 'node'` a propósito y
+no merece la pena arrastrar jsdom por siete pruebas.
+
+**Lo que no tiene pruebas es el CSS.** Que los tokens oscuros existan y tengan
+contraste está medido y documentado arriba; que la hoja los aplique lo decide el
+navegador, y eso no lo cubre Vitest.

@@ -13,14 +13,19 @@ import { Loader } from 'lucide-react'
  */
 
 const VARIANTES = {
+  // El texto del primario es un token, no blanco fijo: en tema oscuro la marca
+  // se aclara hasta #8994f7 y el blanco sobre ella baja a 2,6:1. brand-ink
+  // invierte con el tema —blanco en claro, casi negro en oscuro—.
   primario:
-    'bg-brand text-white border border-transparent hover:bg-brand/90 active:bg-brand/95',
+    'bg-brand text-brand-ink border border-transparent hover:bg-brand/90 active:bg-brand/95',
   secundario:
     'bg-surface text-ink border border-line hover:border-line-strong hover:bg-canvas',
   neutro:
     'bg-transparent text-ink-muted border border-transparent hover:bg-canvas hover:text-ink',
+  // danger-on, no white: al pasar el raton el relleno se vuelve el rojo del
+  // tema, que en oscuro es claro, y el texto tiene que volverse oscuro con el.
   peligro:
-    'bg-surface text-[#b91c1c] border border-[#f0c9c9] hover:bg-[#b91c1c] hover:text-white hover:border-[#b91c1c]',
+    'bg-surface text-danger border border-danger-line hover:bg-danger hover:text-danger-on hover:border-danger',
 }
 
 const TAMANOS = {

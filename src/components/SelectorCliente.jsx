@@ -184,7 +184,7 @@ export default function SelectorCliente({ valor, alCambiar, ...props }) {
           className={`h-9 w-full rounded-md border bg-surface pl-3 pr-9 text-sm text-ink
             transition-colors placeholder:text-ink-muted/60
             hover:border-line-strong focus:outline-none
-            ${props['aria-invalid'] ? 'border-[#b91c1c]' : 'border-line'}`}
+            ${props['aria-invalid'] ? 'border-danger' : 'border-line'}`}
         />
 
         <ChevronDown

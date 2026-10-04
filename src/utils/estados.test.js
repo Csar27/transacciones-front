@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   ESTADO,
+  ESTADOS,
   TRANSICIONES,
   accionesDisponibles,
   esTerminal,
@@ -37,7 +38,25 @@ describe('valores de estado', () => {
     const ficha = fichaEstado(99)
 
     expect(ficha.nombre).toBe('Estado 99')
-    expect(ficha.color).toMatch(/^#[0-9a-f]{6}$/i)
+
+    // El color es una referencia a variable CSS, no un hexadecimal: tiene que
+    // poder cambiar con el tema. Comprobar el patron de la variable es lo que
+    // detecta que alguien ha vuelto a escribir un # fijo y ha roto el oscuro.
+    expect(ficha.color).toBe('var(--color-ink-muted)')
+  })
+
+  it('cada estado apunta a su variable de la hoja de estilo', () => {
+    // Los seis deben existir en estilos.css con el mismo nombre. Si alguien
+    // renombra una variable aqui y no alla, el estado se queda sin pintar y
+    // esto no lo detecta: solo el navegador. Lo que se comprueba es que el
+    // patron no se rompa — que es lo que evita el color hexadecimal.
+    for (const estado of ESTADOS) {
+      expect(estado.color).toMatch(/^var\(--color-estado-[0-5]\)$/)
+    }
+
+    // Y los seis valores del enum tienen ficha: ni mas ni menos, porque el
+    // indice del enum ES el valor de la columna Estado en la base.
+    expect(ESTADOS.map((e) => e.valor)).toEqual([0, 1, 2, 3, 4, 5])
   })
 })
 

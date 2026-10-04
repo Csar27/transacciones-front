@@ -26,7 +26,18 @@ export default function MedidorVigencia({ solicitud, ancho = 'w-16', ahora }) {
   const vencida = fraccion >= 1
   // El color va con la urgencia, no con el estado: una solicitud Registrada a
   // punto de vencer merece mas atencion que otra recien creada.
-  const color = vencida ? '#b91c1c' : fraccion >= 0.75 ? '#b45309' : '#1d4ed8'
+  //
+  // Estos tres son los MISMOS tonos que los estados Rechazada, Vencida y
+  // Registrada. No es coincidencia: azul quieto, ambar de aviso, rojo de
+  // urgencia es el mismo criterio con el que se pinta el resto del panel, y
+  // estaba duplicado aqui como hexadecimal suelto —que es exactamente como se
+  // rompe un tema oscuro—. Ahora la escala de urgencia no se puede
+  // desincronizar del catalogo: son las mismas variables.
+  const color = vencida
+    ? 'var(--color-estado-3)'
+    : fraccion >= 0.75
+      ? 'var(--color-estado-4)'
+      : 'var(--color-estado-1)'
 
   const titulo =
     `Solicitada el ${formatearFecha(solicitud.fechaSolicitud)}` +
@@ -46,7 +57,7 @@ export default function MedidorVigencia({ solicitud, ancho = 'w-16', ahora }) {
 
       <span
         className={`text-xs whitespace-nowrap ${
-          vencida ? 'font-medium text-[#b91c1c]' : 'text-ink-muted'
+          vencida ? 'font-medium text-danger' : 'text-ink-muted'
         }`}
       >
         {textoVigencia(solicitud.fechaVencimiento, ahora)}

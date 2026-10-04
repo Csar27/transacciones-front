@@ -2,6 +2,11 @@ node_modules/
 dist/
 dist-ssr/
 
+# Cache del pre-optimizer de Vite. Es contenido de deps con rutas absolutas a
+# esta maquina: se regenera sola con `npm run dev` y no debe versionarse.
+# Ya estaba subida a GitHub con el primer commit.
+.vite/
+
 # Variables de entorno: .env.example si se versiona, .env no.
 .env
 .env.local

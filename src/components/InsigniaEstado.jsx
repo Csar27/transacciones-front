@@ -6,9 +6,14 @@ import { fichaEstado } from '../utils/estados'
  * El color sale de la ficha del estado y no de una clase de Tailwind: la clase
  * tendria que escribirse a mano y obliga a mantener la paleta en dos sitios.
  *
- * El tinte de fondo se compone anadiendo alpha al hexadecimal del color
- * (8%, "14" en hexadecimal), de modo que el fondo siempre queda sobre el color
- * de la pagina y el texto conserva el contraste completo del color.
+ * El tinte de fondo se compone con color-mix() al 8% del color del estado. Con
+ * color-mix y no con el metodo antiguo de pegar "14" al hexadecimal porque el
+ * color ahora es una variable CSS —`var(--color-estado-1)`— y un valor con dos
+ * digitos pegados al final no es un color.
+ *
+ * Componer sobre el color en vez de pintar un fondo opaco es lo que hace que la
+ * insignia siga leyendose en los dos temas: el fondo siempre queda sobre el
+ * color de la pagina y el texto conserva el contraste completo del estado.
  */
 export default function InsigniaEstado({ estado, className = '' }) {
   const { nombre, color } = fichaEstado(estado)
@@ -22,7 +27,10 @@ export default function InsigniaEstado({ estado, className = '' }) {
       ]
         .filter(Boolean)
         .join(' ')}
-      style={{ backgroundColor: `${color}14`, color }}
+      style={{
+        backgroundColor: `color-mix(in srgb, ${color} 8%, transparent)`,
+        color,
+      }}
     >
       <span
         aria-hidden="true"

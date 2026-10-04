@@ -20,13 +20,13 @@ export default function PanelError({
   const mensaje = error.mensaje || 'Se produjo un error inesperado. Intentalo de nuevo.'
 
   return (
-    <div role="alert" className="rounded-md border border-[#f0c9c9] bg-[#fdf5f5] px-4 py-3.5">
-      <p className="text-sm font-medium text-[#b91c1c]">{titulo}</p>
-      <p className="mt-1 text-[13px] text-[#7f1d1d]">{mensaje}</p>
+    <div role="alert" className="rounded-md border border-danger-line bg-danger-tint px-4 py-3.5">
+      <p className="text-sm font-medium text-danger">{titulo}</p>
+      <p className="mt-1 text-[13px] text-danger-body">{mensaje}</p>
 
       {error.correlationId && (
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[#f0c9c9] pt-3">
-          <span className="text-xs text-[#7f1d1d]">
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-danger-line pt-3">
+          <span className="text-xs text-danger-body">
             Id de correlacion: <span className="font-medium">{error.correlationId}</span>
           </span>
 
@@ -39,7 +39,7 @@ export default function PanelError({
           <button
             type="button"
             onClick={alReintentar}
-            className="text-[13px] font-medium text-[#b91c1c] underline underline-offset-2 hover:no-underline"
+            className="text-[13px] font-medium text-danger underline underline-offset-2 hover:no-underline"
           >
             Reintentar
           </button>
@@ -66,7 +66,7 @@ function BotonCopiar({ texto, etiqueta = 'Copiar' }) {
     <button
       type="button"
       onClick={copiar}
-      className="inline-flex items-center gap-1 text-xs font-medium text-[#7f1d1d] underline underline-offset-2 hover:no-underline"
+      className="inline-flex items-center gap-1 text-xs font-medium text-danger-body underline underline-offset-2 hover:no-underline"
     >
       {estado || etiqueta}
     </button>

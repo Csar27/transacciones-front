@@ -195,9 +195,9 @@ export default function DetalleSolicitud() {
 
         <div className="space-y-6">
           {solicitud.motivoRechazo && (
-            <section className="rounded-md border border-[#f0c9c9] bg-[#fdf5f5] px-4 py-3.5">
-              <h2 className="text-[13px] font-semibold text-[#b91c1c]">Motivo del rechazo</h2>
-              <p className="mt-1 text-[13px] leading-relaxed text-[#7f1d1d]">
+            <section className="rounded-md border border-danger-line bg-danger-tint px-4 py-3.5">
+              <h2 className="text-[13px] font-semibold text-danger">Motivo del rechazo</h2>
+              <p className="mt-1 text-[13px] leading-relaxed text-danger-body">
                 {solicitud.motivoRechazo}
               </p>
             </section>

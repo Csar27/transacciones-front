@@ -22,6 +22,39 @@
   --color-line: #e1e4ee;
   --color-line-strong: #cdd2e2;
 
+  /* Rojo de peligro. Vive aqui y no como hex en los componentes porque aparece
+     en nueve ficheros: sin token, en tema oscuro #7f1d1d sobre fondo oscuro da
+     1,78:1 y el panel #fdf5f5 se convierte en un rectangulo blanco de 16,65:1
+     en mitad de una pantalla negra.
+
+     - danger      icono, texto de emphasis y relleno en hover
+     - danger-on   texto SOBRE un relleno de peligro (el hover del boton)
+     - danger-line borde de panel de error
+     - danger-tint fondo de panel de error
+     - danger-body parrafo dentro del panel
+  */
+  --color-danger: #b91c1c;
+  --color-danger-on: #ffffff;
+  --color-danger-line: #f0c9c9;
+  --color-danger-tint: #fdf5f5;
+  --color-danger-body: #7f1d1d;
+
+  /* Los seis estados, por valor de enum. Se declaran como variables y no como
+     hex en el catalogo de estados.js porque el color tiene que cambiar con el
+     tema: un #1d4ed8 sobre fondo oscuro se apaga. El JS lee el NOMBRE de la
+     variable de esta tabla, y el valor lo resuelve el CSS.
+
+     Reparto del color en tema oscuro: el matiz es EXACTAMENTE el del tema claro
+     --subida la luminosidad y bajada la croma--. Subir solo la luminosidad sin
+     tocar la croma produce neon sobre fondo oscuro.
+  */
+  --color-estado-0: #64748b;
+  --color-estado-1: #1d4ed8;
+  --color-estado-2: #15803d;
+  --color-estado-3: #b91c1c;
+  --color-estado-4: #b45309;
+  --color-estado-5: #475569;
+
   --font-sans:
     'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
@@ -31,6 +64,78 @@
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
+}
+
+/* ==========================================================================
+   Tema oscuro
+   --------------------------------------------------------------------------
+   Se sobreescriben las variables en lugar de usar light-dark(). Motivo: el
+   panel usa modificadores de opacidad sobre estos tokens (bg-canvas/60 en el
+   pie del dialogo), y color-mix() sobre un light-dark() no esta verificado
+   aqui. Duplicar dieciocho lineas es mas barato que depender de un
+   comportamiento que no se ha podido compilar.
+
+   Sin atributo en <html>: manda el sistema. Con data-tema="claro" u
+   "oscuro": manda el usuario, y gana sobre la preferencia del sistema.
+   ========================================================================== */
+@layer base {
+  :root {
+    /* Hace que los controles nativos —barra de desplazamiento, select del
+       sistema, cursor de texto— y la impresion sigan al tema. Sin esto, un
+       <select> se pinta claro sobre una superficie oscura. */
+    color-scheme: light;
+  }
+
+  :root[data-tema='oscuro'] {
+    color-scheme: dark;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    color-scheme: dark;
+
+    /* Los dos cestos se separan por LUMINOSIDAD, no por color: el escritorio
+       es un gris-azulado muy oscuro y lo que flota encima un punto mas claro.
+       El negro puro no deja expresar esa diferencia y aplana los paneles. */
+    --color-canvas: #0b0c11;
+    --color-surface: #16171d;
+
+    --color-ink: #eaebee;
+    --color-ink-muted: #9598a4;
+
+    /* El indigo del tema claro da 2,26:1 sobre esta superficie: reutilizarlo
+       seria el fallo clasico de un tema oscuro hecho a medias. Este conserva
+       el matiz (h=277) con la luz subida y la croma bajada. */
+    --color-brand: #8994f7;
+    --color-brand-ink: #0c0e1c;
+    --color-brand-tint: #1c203d;
+
+    --color-line: #272830;
+    --color-line-strong: #3d3f48;
+
+    /* Sobre un relleno de peligro CLARO el texto tiene que ser oscuro, no
+       blanco. */
+    --color-danger: #f9786a;
+    --color-danger-on: #1b0a08;
+    --color-danger-line: #6a2c26;
+    --color-danger-tint: #34120f;
+    --color-danger-body: #ffc1b7;
+
+    /* Los mismos matices del tema claro, con la luz subida. Medidos sobre el
+       fondo REAL de la insignia —el color al 8% de alfa, no la superficie—:
+       Borrador 6,41 · Registrada 6,56 · Aprobada 7,70 · Rechazada 5,64 ·
+       Vencida 7,47 · Anulada 5,07. Todos sobre 4,5.
+
+       Anulada necesita L=0,655 y no 0,600: a 0,600 se queda en 4,15 y no pasa.
+    */
+    --color-estado-0: #97a6bb;
+    --color-estado-1: #78a7ff;
+    --color-estado-2: #68ca80;
+    --color-estado-3: #f17264;
+    --color-estado-4: #ff995e;
+    --color-estado-5: #8292a8;
+  }
 }
 
 @layer base {
@@ -69,9 +174,20 @@
 @layer utilities {
   /* Difuminado detras del contenido cuando se abre un dialogo, en lugar de un
      overlay negro: sobre papel frio el negro puro tapa la pantalla y oculta que
-     hay algo debajo. */
+     hay algo debajo. En oscuro el velo tiene que ser MAS claro, porque tapar
+     con negro sobre negro no separa nada. */
   .velo {
     background-color: rgb(20 23 31 / 0.45);
+  }
+
+  :root[data-tema='oscuro'] .velo {
+    background-color: rgb(0 0 0 / 0.62);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-tema='claro']) .velo {
+      background-color: rgb(0 0 0 / 0.62);
+    }
   }
 }
 

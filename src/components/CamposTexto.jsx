@@ -21,7 +21,7 @@ function clases({ invalido, className = '' }) {
   return [
     CLASE_BASE,
     ALTO,
-    invalido ? 'border-[#b91c1c]' : 'border-line',
+    invalido ? 'border-danger' : 'border-line',
     'disabled:opacity-60',
     className,
   ].join(' ')
@@ -42,7 +42,7 @@ export function AreaTexto({ className, ...props }) {
       className={[
         CLASE_BASE,
         'py-2 leading-relaxed resize-y',
-        esInvalido(props) ? 'border-[#b91c1c]' : 'border-line',
+        esInvalido(props) ? 'border-danger' : 'border-line',
         className,
       ].join(' ')}
       {...props}

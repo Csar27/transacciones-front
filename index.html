@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light" />
+    <!--
+      "light dark" declara que la pagina sabe de los dos temas. Es lo que hace
+      que la barra de desplazamiento, los controles nativos y la impresion
+      sigan al tema sin esperar a que arranque React. Con "light" fijo, un
+      <select> del sistema se pinta claro encima de una superficie oscura.
+    -->
+    <meta name="color-scheme" content="light dark" />
     <meta
       name="description"
       content="Registro y gestion de solicitudes de transacciones."

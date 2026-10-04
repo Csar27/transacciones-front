@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { FileText, PanelLeft, BookOpen, X } from 'lucide-react'
 import BotonCorrelacion from '../components/BotonCorrelacion'
+import BotonTema from '../components/BotonTema'
 
 /**
  * Estructura de la aplicacion: lateral fijo en escritorio, cajon en movil y
@@ -151,6 +152,7 @@ export default function LayoutPrincipal() {
           </span>
 
           <div className="ml-auto flex items-center gap-2">
+            <BotonTema />
             <BotonCorrelacion />
           </div>
         </header>

@@ -102,7 +102,7 @@ export default function DialogoRechazo({
         </Campo>
 
         <div className="mt-1 flex justify-end text-xs text-ink-muted">
-          <span className={motivo.length > 500 ? 'text-[#b91c1c]' : undefined}>
+          <span className={motivo.length > 500 ? 'text-danger' : undefined}>
             {motivo.length} de 500
           </span>
         </div>

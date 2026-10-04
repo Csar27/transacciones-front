@@ -33,7 +33,7 @@ export default function Campo({
       <label htmlFor={id} className="text-[13px] font-medium text-ink">
         {etiqueta}
         {obligatorio && (
-          <span className="ml-1 text-[#b91c1c]" aria-hidden="true">
+          <span className="ml-1 text-danger" aria-hidden="true">
             *
           </span>
         )}
@@ -52,7 +52,7 @@ export default function Campo({
       )}
 
       {error && (
-        <p id={idError} role="alert" className="text-xs text-[#b91c1c]">
+        <p id={idError} role="alert" className="text-xs text-danger">
           {error}
         </p>
       )}

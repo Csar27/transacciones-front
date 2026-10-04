@@ -168,13 +168,13 @@ const monedaElegida = watch('moneda') || MONEDA_POR_DEFECTO
       </Campo>
 
       <div className="sm:col-span-2 -mt-1 flex justify-end text-xs text-ink-muted">
-        <span className={observacion.length > LIMITE_OBSERVACION ? 'text-[#b91c1c]' : undefined}>
+        <span className={observacion.length > LIMITE_OBSERVACION ? 'text-danger' : undefined}>
           {observacion.length} de {LIMITE_OBSERVACION}
         </span>
       </div>
 
       {errorGeneral && !errorGeneral.campos && (
-        <p role="alert" className="sm:col-span-2 flex items-start gap-2 rounded-md bg-[#fdf5f5] px-3 py-2.5 text-[13px] text-[#7f1d1d]">
+        <p role="alert" className="sm:col-span-2 flex items-start gap-2 rounded-md bg-danger-tint px-3 py-2.5 text-[13px] text-danger-body">
           <Info size={15} aria-hidden="true" className="mt-px shrink-0" />
           <span>
             {errorGeneral.mensaje}

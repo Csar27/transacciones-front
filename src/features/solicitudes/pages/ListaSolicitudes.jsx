@@ -291,8 +291,8 @@ function Fila({ solicitud, onRechazar }) {
                 onRechazar(solicitud)
               }}
               aria-label={`Rechazar ${solicitud.codigo}`}
-              className="rounded-md px-2 py-1 text-xs font-medium text-[#b91c1c]
-                hover:bg-[#fdf5f5]"
+              className="rounded-md px-2 py-1 text-xs font-medium text-danger
+                hover:bg-danger-tint"
             >
               Rechazar
             </button>
