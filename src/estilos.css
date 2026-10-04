@@ -1,0 +1,88 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   Tokens
+   --------------------------------------------------------------------------
+   El panel tiene dos ejes: el ESTADO (la maquina de transiciones) y el TIEMPO
+   (la vigencia, con fecha limite). Casi todo lo visual sale de ahi.
+
+   El indigo es #4338CA y no el #4F46E5 de la paleta por defecto de Tailwind:
+   el valor por defecto es tan habitual que acaba funcionando como color de
+   marca de cualquier plantilla. Un punto mas oscuro y mas saturado se sostiene
+   mejor sobre papel frio y no se lava al lado de un badge rojo o ambar.
+   ========================================================================== */
+@theme {
+  --color-canvas: #f1f3f9;
+  --color-surface: #ffffff;
+  --color-ink: #14171f;
+  --color-ink-muted: #666e85;
+  --color-brand: #4338ca;
+  --color-brand-ink: #ffffff;
+  --color-brand-tint: #edeefa;
+  --color-line: #e1e4ee;
+  --color-line-strong: #cdd2e2;
+
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Radios contenidos. Un panel administrativo con radios grandes empieza a
+     parecer una tarjeta de venta; 6px es el punto donde sigue leyendose como
+     interfaz densa. */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    /* Cifras de ancho fijo en TODO el documento. Montos, codigos y fechas
+       tienen que alinearse en columna; con cifras proporcionales el ojo no
+       encuentra la fila y la tabla se lee como una lista suelta. */
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Un unico anillo de foco en toda la app. No se fija border-radius aqui a
+     proposito: pondria la propiedad en una regla de elemento y pisaria el
+     radio que cada componente haya elegido. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  /* Sin esto, el navegador difumina el anillo cuando el elemento esta en el
+     borde de la ventana. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+@layer utilities {
+  /* Difuminado detras del contenido cuando se abre un dialogo, en lugar de un
+     overlay negro: sobre papel frio el negro puro tapa la pantalla y oculta que
+     hay algo debajo. */
+  .velo {
+    background-color: rgb(20 23 31 / 0.45);
+  }
+}
+
+/* El movimiento se respeta cuando el sistema lo pide. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
